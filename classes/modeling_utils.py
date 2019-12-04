@@ -345,7 +345,7 @@ class PreTrainedModel(nn.Module):
             else:
                 assert from_tf, "Error finding file {}, no file or TF 1.X checkpoint found".format(pretrained_model_name_or_path)
                 archive_file = pretrained_model_name_or_path + ".index"
-
+            '''
             # redirect to the cache, if necessary
             try:
                 resolved_archive_file = cached_path(archive_file, cache_dir=cache_dir, force_download=force_download, proxies=proxies)
@@ -368,6 +368,7 @@ class PreTrainedModel(nn.Module):
             else:
                 logger.info("loading weights file {} from cache at {}".format(
                     archive_file, resolved_archive_file))
+            '''
         else:
             resolved_archive_file = None
 
@@ -375,21 +376,21 @@ class PreTrainedModel(nn.Module):
         model = cls(config, *model_args, **model_kwargs)
 
         if state_dict is None and not from_tf:
-            state_dict = torch.load(resolved_archive_file, map_location='cpu')
+            state_dict = torch.load(archive_file, map_location='cpu')
 
         missing_keys = []
         unexpected_keys = []
         error_msgs = []
 
         if from_tf:
-            if resolved_archive_file.endswith('.index'):
+            if archive_file.endswith('.index'):
                 # Load from a TensorFlow 1.X checkpoint - provided by original authors
-                model = cls.load_tf_weights(model, config, resolved_archive_file[:-6])  # Remove the '.index'
+                model = cls.load_tf_weights(model, config, archive_file[:-6])  # Remove the '.index'
             else:
                 # Load from our TensorFlow 2.0 checkpoints
                 try:
                     from transformers import load_tf2_checkpoint_in_pytorch_model
-                    model = load_tf2_checkpoint_in_pytorch_model(model, resolved_archive_file, allow_missing_keys=True)
+                    model = load_tf2_checkpoint_in_pytorch_model(model, archive_file, allow_missing_keys=True)
                 except ImportError as e:
                     logger.error("Loading a TensorFlow model in PyTorch, requires both PyTorch and TensorFlow to be installed. Please see "
                         "https://pytorch.org/ and https://www.tensorflow.org/install/ for installation instructions.")

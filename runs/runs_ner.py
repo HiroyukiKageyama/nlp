@@ -26,8 +26,13 @@ def main():
     labels = ["O", "B-MISC", "I-MISC",  "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC"]
     num_labels = len(labels)
     pad_token_label_id = CrossEntropyLoss().ignore_index
-    config = BertConfig(vocab_size_or_config_json_file=file_utils.get_bert_congfig_path())
-    model_class = BertForTokenClassification(config)
+    config_class = BertConfig(vocab_size_or_config_json_file=file_utils.get_bert_congfig_path())
+    model_class = BertForTokenClassification(config_class)
+    config = config_class.from_pretrained(pretrained_model_name_or_path='./pre_train_model/bert/pytorch/',num_labels=num_labels,cache_dir="")
+    model = model_class.from_pretrained(pretrained_model_name_or_path='./pre_train_model/bert/pytorch/',
+                                        from_tf=False,
+                                        config=config,
+                                        cache_dir="")
     print()
     
 if __name__ == "__main__":

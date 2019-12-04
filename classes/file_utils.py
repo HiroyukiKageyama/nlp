@@ -71,7 +71,7 @@ TRANSFORMERS_CACHE = PYTORCH_PRETRAINED_BERT_CACHE  # Kept for backward compatib
 WEIGHTS_NAME = "pytorch_model.bin"
 TF2_WEIGHTS_NAME = 'tf_model.h5'
 TF_WEIGHTS_NAME = 'model.ckpt'
-CONFIG_NAME = "config.json"
+CONFIG_NAME = "bert_config.json"
 
 def is_torch_available():
     return _torch_available

@@ -124,26 +124,28 @@ class PretrainedConfig(object):
         proxies = kwargs.pop('proxies', None)
         return_unused_kwargs = kwargs.pop('return_unused_kwargs', False)
 
-        if pretrained_model_name_or_path in cls.pretrained_config_archive_map:
-            config_file = cls.pretrained_config_archive_map[pretrained_model_name_or_path]
-        elif os.path.isdir(pretrained_model_name_or_path):
+        #if pretrained_model_name_or_path in cls.pretrained_config_archive_map:
+            #config_file = cls.pretrained_config_archive_map[pretrained_model_name_or_path]
+        if os.path.isdir(pretrained_model_name_or_path):
             config_file = os.path.join(pretrained_model_name_or_path, CONFIG_NAME)
         else:
             config_file = pretrained_model_name_or_path
+        
+        '''
         # redirect to the cache, if necessary
         try:
             resolved_config_file = cached_path(config_file, cache_dir=cache_dir, force_download=force_download, proxies=proxies)
         except EnvironmentError:
-            if pretrained_model_name_or_path in cls.pretrained_config_archive_map:
-                msg = "Couldn't reach server at '{}' to download pretrained model configuration file.".format(
-                        config_file)
-            else:
-                msg = "Model name '{}' was not found in model name list ({}). " \
-                      "We assumed '{}' was a path or url to a configuration file named {} or " \
-                      "a directory containing such a file but couldn't find any such file at this path or url.".format(
-                        pretrained_model_name_or_path,
-                        ', '.join(cls.pretrained_config_archive_map.keys()),
-                        config_file, CONFIG_NAME)
+            #if pretrained_model_name_or_path in cls.pretrained_config_archive_map:
+                #msg = "Couldn't reach server at '{}' to download pretrained model configuration file.".format(
+                #        config_file)
+            #else:
+                #msg = "Model name '{}' was not found in model name list ({}). " \
+                #      "We assumed '{}' was a path or url to a configuration file named {} or " \
+                #      "a directory containing such a file but couldn't find any such file at this path or url.".format(
+                #        pretrained_model_name_or_path,
+                 #       ', '.join(cls.pretrained_config_archive_map.keys()),
+                 #       config_file, CONFIG_NAME)
             raise EnvironmentError(msg)
 
         if resolved_config_file == config_file:
@@ -151,9 +153,10 @@ class PretrainedConfig(object):
         else:
             logger.info("loading configuration file {} from cache at {}".format(
                 config_file, resolved_config_file))
+        '''
 
         # Load config
-        config = cls.from_json_file(resolved_config_file)
+        config = cls.from_json_file(config_file)
 
         if hasattr(config, 'pruned_heads'):
             config.pruned_heads = dict((int(key), value) for key, value in config.pruned_heads.items())
