@@ -6,6 +6,7 @@ import torch
 from torch import nn
 from classes.modeling_utils import PreTrainedModel
 from torch.nn import CrossEntropyLoss, MSELoss
+import math
 
 BertLayerNorm = torch.nn.LayerNorm
 
