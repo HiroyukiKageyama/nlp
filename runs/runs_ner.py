@@ -77,14 +77,12 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-def train(train_dataset, model, tokenizer, labels, pad_token_label_id):
+def train(train_dataset, model, tokenizer, labels, pad_token_label_id,batch_size):
     """ Train the model """
     tb_writer = SummaryWriter()
-    train_batch_size = 8
     train_sampler = RandomSampler(train_dataset)
-    train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=train_batch_size)
+    train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=batch_size)
 
-    
     t_total = len(train_dataloader) // 1 * 3
 
     # Prepare optimizer and schedule (linear warmup and decay)
@@ -324,7 +322,7 @@ def main():
     model.to(device)
 
     train_dataset = load_and_cache_examples('./data/ner', tokenizer, labels, pad_token_label_id, mode="train")
-    global_step, tr_loss = train(train_dataset, model, tokenizer, labels, pad_token_label_id)
+    global_step, tr_loss = train(train_dataset, model, tokenizer, labels, pad_token_label_id,8)
     logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
     
     
